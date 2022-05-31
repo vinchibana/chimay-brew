@@ -2,20 +2,7 @@
   <div class="list-container">
     <div class="sortList clearfix">
       <div class="center">
-        <!--banner轮播-->
-        <div class="swiper-container" id="mySwiper">
-          <div class="swiper-wrapper">
-            <div class="swiper-slide">
-              <img src="./images/banner1.jpg" alt="" />
-            </div>
-          </div>
-          <!-- 如果需要分页器 -->
-          <div class="swiper-pagination"></div>
-
-          <!-- 如果需要导航按钮 -->
-          <div class="swiper-button-prev"></div>
-          <div class="swiper-button-next"></div>
-        </div>
+        <Carousel :list="bannerList" />
       </div>
       <div class="right">
         <div class="news">
@@ -91,8 +78,18 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
+
 export default {
   name: "ListContainer",
+  mounted() {
+    this.$store.dispatch("getBannerList");
+  },
+  computed: {
+    ...mapState({
+      bannerList: (state) => state.home.bannerList,
+    }),
+  },
 };
 </script>
 

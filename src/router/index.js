@@ -10,12 +10,13 @@ Vue.use(VueRouter);
 export default new VueRouter({
   routes: [
     {
+      name: "home",
       path: "/home",
       component: Home,
       meta: { show: true },
     },
     {
-      name:'search',
+      name: "search",
       path: "/search",
       component: Search,
       meta: { show: true },

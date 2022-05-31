@@ -1,10 +1,10 @@
 <template>
   <div class="type-nav">
     <div class="container">
-      <div @mouseleave="leaveIndex">
+      <div @mouseleave="hideOnLeave" @mouseenter="showOnEnter">
         <h2 class="all">全部商品分类</h2>
-        <div class="sort">
-          <div class="all-sort-list2">
+        <div class="sort" v-show="showTypeNav">
+          <div class="all-sort-list2" @click="goSearch">
             <div
               class="item bo"
               v-for="(c1, index) in categoryList"
@@ -12,7 +12,11 @@
               :class="{ cur: currentIndex === index }"
             >
               <h3 @mouseenter="changeIndex(index)">
-                <a href="">{{ c1.categoryName }}</a>
+                <a
+                  :data-catName="c1.categoryName"
+                  :data-catId="c1.categoryId"
+                  >{{ c1.categoryName }}</a
+                >
               </h3>
               <!-- 控制二级分类是否显示，此时 currentIndex 已经被 h3 的鼠标事件修改为与 index 相同-->
               <div
@@ -26,11 +30,19 @@
                 >
                   <dl class="fore">
                     <dt>
-                      <a href="">{{ c2.categoryName }}</a>
+                      <a
+                        :data-catName="c2.categoryName"
+                        :data-cat2Id="c2.categoryId"
+                        >{{ c2.categoryName }}</a
+                      >
                     </dt>
                     <dd>
                       <em v-for="c3 in c2.categoryChild" :key="c3.categoryId">
-                        <a href="">{{ c3.categoryName }}</a>
+                        <a
+                          :data-catName="c3.categoryName"
+                          :data-cat3Id="c3.categoryId"
+                          >{{ c3.categoryName }}</a
+                        >
                       </em>
                     </dd>
                   </dl>
@@ -56,22 +68,54 @@
 
 <script>
 import { mapState } from "vuex";
+import throttle from "lodash/throttle";
+
 export default {
   name: "TypeNav",
   data() {
     return {
       currentIndex: -1,
+      showTypeNav: true,
     };
   },
   mounted() {
-    this.$store.dispatch("categoryList");
+    if (this.$route.path !== "/home") {
+      this.showTypeNav = false;
+    }
   },
   methods: {
-    changeIndex(index) {
+    changeIndex: throttle(function (index) {
       this.currentIndex = index;
+    }),
+    showOnEnter() {
+      if (this.$route.path !== "/home") {
+        this.showTypeNav = true;
+      }
     },
-    leaveIndex() {
+    // 非主页隐藏全部商品分类
+    hideOnLeave() {
       this.currentIndex = -1;
+      if (this.$route.path !== "/home") {
+        this.showTypeNav = false;
+      }
+    },
+    goSearch(event) {
+      let { catname, catid, cat2id, cat3id } = event.target.dataset;
+      let location = { name: "search" };
+      let query = { categoryName: catname };
+      if (catname) {
+        // 为 query 参数动态添加 categoryId属性值
+        if (catid) {
+          query.categoryId = catid;
+        } else if (cat2id) {
+          query.categoryId = cat2id;
+        } else {
+          query.categoryId = cat3id;
+        }
+      }
+      // 用路由 name 和 query 拼接 location 对象
+      location.query = query;
+      this.$router.push(location);
     },
   },
   computed: {
