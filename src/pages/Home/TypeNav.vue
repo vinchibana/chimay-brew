@@ -116,6 +116,7 @@ export default {
       // 用路由 name 和 query 拼接 location 对象
       location.query = query;
       this.$router.push(location);
+      console.log(location)
     },
   },
   computed: {
