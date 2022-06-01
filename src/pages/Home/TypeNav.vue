@@ -100,23 +100,27 @@ export default {
       }
     },
     goSearch(event) {
-      let { catname, catid, cat2id, cat3id } = event.target.dataset;
-      let location = { name: "search" };
-      let query = { categoryName: catname };
+      let targetNode = event.target;
+      let { catname, catid, cat2id, cat3id } = targetNode.dataset;
       if (catname) {
-        // 为 query 参数动态添加 categoryId属性值
+        let locations = {
+          name: "search",
+          query: { categoryName: catname },
+        };
         if (catid) {
-          query.categoryId = catid;
+          locations.query.categoryId = catid;
         } else if (cat2id) {
-          query.categoryId = cat2id;
+          locations.query.category2Id = cat2id;
         } else {
-          query.categoryId = cat3id;
+          locations.query.category3Id = cat3id;
         }
+        //点击商品分类按钮的时候,如果路径当中携带params参数,需要合并携带给search模块
+        if (this.$route.params.keyword) {
+          locations.params = this.$route.params;
+        }
+        //目前商品分类这里携带参数只有query参数
+        this.$router.push(locations);
       }
-      // 用路由 name 和 query 拼接 location 对象
-      location.query = query;
-      this.$router.push(location);
-      console.log(location)
     },
   },
   computed: {

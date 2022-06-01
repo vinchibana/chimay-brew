@@ -11,14 +11,31 @@
             </li>
           </ul>
           <ul class="fl sui-tag">
-            <li class="with-x">手机</li>
-            <li class="with-x">iphone<i>×</i></li>
-            <li class="with-x">华为<i>×</i></li>
-            <li class="with-x">OPPO<i>×</i></li>
+            <li class="with-x" v-if="searchParams.categoryName">
+              {{ searchParams.categoryName
+              }}<i @click="removeBreadCatName">×</i>
+            </li>
+            <li class="with-x" v-if="searchParams.keyword">
+              {{ searchParams.keyword }}<i @click="removeBreadKeyword">×</i>
+            </li>
+            <li class="with-x" v-if="searchParams.trademark">
+              {{ searchParams.trademark.split(":")[1]
+              }}<i @click="removeBreadTrade">×</i>
+            </li>
+            <li
+              class="with-x"
+              v-for="(attrValue, index) in searchParams.props"
+              :key="index"
+            >
+              {{ attrValue.split(":")[1] }}<i @click="removeBreadAttr(index)">×</i>
+            </li>
           </ul>
         </div>
-        <!--selector-->
-        <SearchSelector />
+        <!-- 子组件自定义事件 -->
+        <SearchSelector
+          @trademarkSelector="trademarkSelector"
+          @attrSelector="attrSelector"
+        />
         <!--details-->
         <div class="details clearfix">
           <div class="sui-navbar">
@@ -162,6 +179,63 @@ export default {
   methods: {
     getSearchData() {
       this.$store.dispatch("getSearchList", this.searchParams);
+    },
+    removeBreadCatName() {
+      this.searchParams.categoryName = undefined;
+      this.searchParams.category1Id = undefined;
+      this.searchParams.category2Id = undefined;
+      this.searchParams.category3Id = undefined;
+      this.getSearchData();
+      if (this.$route.params) {
+        this.$router
+          .push({
+            name: "search",
+            params: this.$route.params,
+          })
+          .catch((err) => err);
+      }
+    },
+    removeBreadKeyword() {
+      this.searchParams.keyword = undefined;
+      this.getSearchData();
+      this.$bus.$emit("clearSearchInput");
+      if (this.$route.query) {
+        this.$router
+          .push({
+            name: "search",
+          })
+          .catch((err) => err);
+      }
+    },
+    // 品牌面包屑展示与删除
+    trademarkSelector(trademark) {
+      this.searchParams.trademark = `${trademark.tmId}:${trademark.tmName}`;
+      this.getSearchData();
+    },
+    removeBreadTrade() {
+      this.searchParams.trademark = undefined;
+      this.getSearchData();
+    },
+    // 商品属性面包屑展示与删除
+    attrSelector(attr, attrValue) {
+      let props = `${attr.attrId}:${attrValue}:${attr.attrName}`;
+      if (this.searchParams.props.indexOf(props) === -1)
+        this.searchParams.props.push(props);
+      this.getSearchData();
+    },
+    removeBreadAttr(index) {
+      console.log(index)
+      this.searchParams.props.splice(index,1);
+      this.getSearchData();
+    },
+  },
+  watch: {
+    $route(newVal, oldVal) {
+      Object.assign(this.searchParams, this.$route.query, this.$route.params);
+      this.getSearchData();
+      this.searchParams.category1Id = undefined;
+      this.searchParams.category2Id = undefined;
+      this.searchParams.category3Id = undefined;
     },
   },
 };

@@ -25,9 +25,9 @@
     <!--头部第二行 搜索区域-->
     <div class="bottom">
       <h1 class="logoArea">
-        <a class="logo" title="chimay" href="#" target="_blank">
+        <router-link class="logo" title="chimay" to="/home">
           <img src="../assets/logo.png" alt="" />
-        </a>
+        </router-link>
       </h1>
       <div class="searchArea">
         <form action="#" class="searchForm">
@@ -58,14 +58,21 @@ export default {
       keyword: "",
     };
   },
+  mounted() {
+    this.$bus.$on("clearSearchInput", () => {
+      this.keyword = "";
+    });
+  },
   methods: {
     goSearch() {
-      this.$router
-        .push({
-          name: "search",
-          params: { keyword: this.keyword },
-        })
-        .catch((err) => err);
+      let locations = {
+        name: "search",
+        params: { keyword: this.keyword || undefined },
+      };
+      if (this.$route.query.categoryName) {
+        locations.query = this.$route.query;
+      }
+      this.$router.push(locations).catch((err) => err);
     },
   },
 };
