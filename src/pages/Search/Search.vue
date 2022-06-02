@@ -27,7 +27,8 @@
               v-for="(attrValue, index) in searchParams.props"
               :key="index"
             >
-              {{ attrValue.split(":")[1] }}<i @click="removeBreadAttr(index)">×</i>
+              {{ attrValue.split(":")[1]
+              }}<i @click="removeBreadAttr(index)">×</i>
             </li>
           </ul>
         </div>
@@ -41,23 +42,29 @@
           <div class="sui-navbar">
             <div class="navbar-inner filter">
               <ul class="sui-nav">
-                <li class="active">
-                  <a href="#">综合</a>
+                <li :class="{ active: flagIndicator }" @click="changeOrder(1)">
+                  <a
+                    >综合<span
+                      v-show="flagIndicator"
+                      class="iconfont"
+                      :class="{
+                        'icon-asc': ascIndicator,
+                        'icon-desc': descIndicator,
+                      }"
+                    ></span
+                  ></a>
                 </li>
-                <li>
-                  <a href="#">销量</a>
-                </li>
-                <li>
-                  <a href="#">新品</a>
-                </li>
-                <li>
-                  <a href="#">评价</a>
-                </li>
-                <li>
-                  <a href="#">价格⬆</a>
-                </li>
-                <li>
-                  <a href="#">价格⬇</a>
+                <li :class="{ active: flag2Indicator }" @click="changeOrder(2)">
+                  <a
+                    >销量<span
+                      v-show="flag2Indicator"
+                      class="iconfont"
+                      :class="{
+                        'icon-asc': ascIndicator,
+                        'icon-desc': descIndicator,
+                      }"
+                    ></span
+                  ></a>
                 </li>
               </ul>
             </div>
@@ -154,7 +161,7 @@ export default {
         category3Id: "",
         categoryName: "",
         keyword: "",
-        order: "",
+        order: "1:desc",
         pageNo: 1,
         pageSize: 10,
         props: [],
@@ -167,6 +174,18 @@ export default {
   },
   computed: {
     ...mapGetters(["goodsList"]),
+    flagIndicator() {
+      return this.searchParams.order.indexOf("1") !== -1;
+    },
+    flag2Indicator() {
+      return this.searchParams.order.indexOf("2") !== -1;
+    },
+    ascIndicator() {
+      return this.searchParams.order.indexOf("asc") !== -1;
+    },
+    descIndicator() {
+      return this.searchParams.order.indexOf("desc") !== -1;
+    },
   },
   // params 来自于 Header 组件取自 input 框的 keyword 参数
   // query 来自于 TypeNav 组件 push location 前拼接的参数 {name:'search',query:{...}}
@@ -224,13 +243,26 @@ export default {
       this.getSearchData();
     },
     removeBreadAttr(index) {
-      console.log(index)
-      this.searchParams.props.splice(index,1);
+      this.searchParams.props.splice(index, 1);
+      this.getSearchData();
+    },
+    changeOrder(flag) {
+      let originFlag = parseInt(this.searchParams.order.split(":")[0]);
+      let originSort = this.searchParams.order.split(":")[1];
+      let newOrder = "";
+      if (flag === originFlag) {
+        newOrder = `${originFlag}:${originSort === "desc" ? "asc" : "desc"}`;
+        console.log("if", newOrder);
+      } else {
+        newOrder = `${flag}:desc`;
+        console.log("else", newOrder);
+      }
+      this.searchParams.order = newOrder;
       this.getSearchData();
     },
   },
   watch: {
-    $route(newVal, oldVal) {
+    $route() {
       Object.assign(this.searchParams, this.$route.query, this.$route.params);
       this.getSearchData();
       this.searchParams.category1Id = undefined;
