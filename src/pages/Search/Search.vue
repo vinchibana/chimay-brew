@@ -114,33 +114,13 @@
             </ul>
           </div>
           <div class="fr page">
-            <div class="sui-pagination clearfix">
-              <ul>
-                <li class="prev disabled">
-                  <a href="#">«上一页</a>
-                </li>
-                <li class="active">
-                  <a href="#">1</a>
-                </li>
-                <li>
-                  <a href="#">2</a>
-                </li>
-                <li>
-                  <a href="#">3</a>
-                </li>
-                <li>
-                  <a href="#">4</a>
-                </li>
-                <li>
-                  <a href="#">5</a>
-                </li>
-                <li class="dotted"><span>...</span></li>
-                <li class="next">
-                  <a href="#">下一页»</a>
-                </li>
-              </ul>
-              <div><span>共10页&nbsp;</span></div>
-            </div>
+            <Pagination
+              :total="total"
+              :pageSize="searchParams.pageSize"
+              :pageNo="searchParams.pageNo"
+              :pagerCount="5"
+              @currentPage="currentPage"
+            ></Pagination>
           </div>
         </div>
       </div>
@@ -149,8 +129,9 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapState, mapGetters } from "vuex";
 import SearchSelector from "./SearchSelector/SearchSelector";
+import Pagination from "@/pages/Search/Pagination";
 export default {
   name: "Search",
   data() {
@@ -171,6 +152,7 @@ export default {
   },
   components: {
     SearchSelector,
+    Pagination,
   },
   computed: {
     ...mapGetters(["goodsList"]),
@@ -186,6 +168,9 @@ export default {
     descIndicator() {
       return this.searchParams.order.indexOf("desc") !== -1;
     },
+    ...mapState({
+      total: (state) => state.search.searchList.total,
+    }),
   },
   // params 来自于 Header 组件取自 input 框的 keyword 参数
   // query 来自于 TypeNav 组件 push location 前拼接的参数 {name:'search',query:{...}}
@@ -259,6 +244,10 @@ export default {
       }
       this.searchParams.order = newOrder;
       this.getSearchData();
+    },
+    currentPage(pageNo) {
+      this.searchParams.pageNo = pageNo;
+      this.getSearchData()
     },
   },
   watch: {
