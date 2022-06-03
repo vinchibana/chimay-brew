@@ -1,6 +1,7 @@
 import axios from "axios";
 import nprogress from "nprogress";
 import "nprogress/nprogress.css";
+import store from "@/store";
 
 // 请求拦截器
 const requests = axios.create({
@@ -12,6 +13,9 @@ const requests = axios.create({
 requests.interceptors.request.use(
   function (config) {
     // 在发送请求之前做些什么
+    if (store.state.detail.uuid_token) {
+      config.headers.userTempId = store.state.detail.uuid_token;
+    }
     nprogress.start();
     return config;
   },

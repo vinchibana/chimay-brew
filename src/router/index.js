@@ -4,6 +4,9 @@ import Home from "@/pages/Home/Home";
 import Search from "@/pages/Search/Search";
 import Login from "@/pages/Login";
 import Register from "@/pages/Register";
+import Detail from "@/pages/Detail/Detail";
+import AddCartSuccess from "@/pages/AddCartSuccess";
+import ShopCart from "@/pages/ShopCart";
 
 Vue.use(VueRouter);
 
@@ -17,7 +20,7 @@ export default new VueRouter({
     },
     {
       name: "search",
-      path: "/search/:keyword?",
+      path: "/search/:keyword?", // params 传参占位
       component: Search,
       meta: { show: true },
     },
@@ -32,8 +35,29 @@ export default new VueRouter({
       meta: { show: false },
     },
     {
+      name: "detail",
+      path: "/detail/:skuid",
+      component: Detail,
+      meta: { show: false },
+    },
+    {
+      name: "addcartsuccess",
+      path: "/addcartsuccess",
+      component: AddCartSuccess,
+      meta: { show: true },
+    },
+    {
+      name: "shopcart",
+      path: "/shopcart",
+      component: ShopCart,
+      meta: { show: true },
+    },
+    {
       path: "/",
       redirect: "/home",
     },
   ],
+  scrollBehavior() {
+    return { y: 0 };
+  },
 });

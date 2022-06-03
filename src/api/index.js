@@ -6,6 +6,15 @@ export const reqCategoryList = () =>
 export const reqSearchList = (params) =>
   requests({ url: "/list", method: "post", data: params });
 
+export const reqSkuInfo = (skuId) =>
+  requests({ url: `/item/${skuId}`, method: "get" });
+
+export const reqUpdateCart = (skuId, skuNum) =>
+  requests({ url: `/cart/addToCart/${skuId}/${skuNum}`, method: "post" });
+
+export const reqCartList = () =>
+  requests({ url: "/cart/cartList", method: "get" });
+
 export const reqBannerList = () =>
   mockRequests({ url: "/banner", method: "get" });
 
