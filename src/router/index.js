@@ -1,12 +1,13 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import Home from "@/pages/Home/Home";
-import Search from "@/pages/Search/Search";
+import Home from "@/pages/Home";
+import Search from "@/pages/Search";
 import Login from "@/pages/Login";
 import Register from "@/pages/Register";
-import Detail from "@/pages/Detail/Detail";
+import Detail from "@/pages/Detail";
 import AddCartSuccess from "@/pages/AddCartSuccess";
 import ShopCart from "@/pages/ShopCart";
+
 
 Vue.use(VueRouter);
 

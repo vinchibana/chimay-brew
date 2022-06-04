@@ -269,7 +269,7 @@ export default {
   .py-container {
     width: 1200px;
     margin: 0 auto;
-
+    cursor: pointer;
     .bread {
       margin-bottom: 5px;
       overflow: hidden;

@@ -540,6 +540,7 @@ export default {
         }
 
         .choose {
+
           .chooseArea {
             overflow: hidden;
             line-height: 28px;
@@ -555,6 +556,7 @@ export default {
               }
 
               dd {
+                cursor: pointer;
                 float: left;
                 margin-right: 5px;
                 color: #666;
@@ -615,6 +617,7 @@ export default {
             }
 
             .add {
+              cursor: pointer;
               float: left;
               a {
                 background-color: #e1251b;
@@ -708,6 +711,7 @@ export default {
                     margin: 5px 0;
 
                     a {
+                      cursor: pointer;
                       background-color: transparent;
                       border: 1px solid #8c8c8c;
                       color: #8c8c8c;

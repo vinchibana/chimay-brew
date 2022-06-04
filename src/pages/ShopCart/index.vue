@@ -17,7 +17,12 @@
           :key="cartItem.id"
         >
           <li class="cart-list-con1">
-            <input type="checkbox" name="chk_list" />
+            <input
+              type="checkbox"
+              name="chk_list"
+              :checked="cartItem.isChecked"
+              @change="updateStatus(cartItem)"
+            />
           </li>
           <li class="cart-list-con2">
             <img :src="cartItem.imgUrl" alt="" />
@@ -29,22 +34,22 @@
             <span class="price">{{ cartItem.skuPrice }}.00</span>
           </li>
           <li class="cart-list-con5">
-            <a @click="minusSkuNum(cartItem)" class="mins">-</a>
+            <a @click="changeSkuNum('minus', -1, cartItem)" class="mins">-</a>
             <input
               autocomplete="off"
               type="text"
               :value="cartItem.skuNum"
               minnum="'1"
               class="itxt"
-              @change="changeSkuNum(cartItem)"
+              @change="changeSkuNum('change', $event.target.value, cartItem)"
             />
-            <a @click="addSkuNum(cartItem)" class="plus">+</a>
+            <a @click="changeSkuNum('add', 1, cartItem)" class="plus">+</a>
           </li>
           <li class="cart-list-con6">
             <span class="sum">{{ cartItem.skuNum * cartItem.skuPrice }}</span>
           </li>
           <li class="cart-list-con7">
-            <a href="#" class="sindelet">删除</a>
+            <a @click="deleteCartItemById(cartItem)" class="sindelet">删除</a>
             <br />
             <a href="#">移到收藏</a>
           </li>
@@ -57,7 +62,7 @@
         <span>全选</span>
       </div>
       <div class="option">
-        <a href="#">删除选中的商品</a>
+        <a @click="deleteAllChecked">删除选中的商品</a>
         <a href="#">移到我的关注</a>
         <a href="#">清除下柜商品</a>
       </div>
@@ -78,7 +83,7 @@
 <script>
 import { mapGetters } from "vuex";
 import throttle from "lodash/throttle";
-import { debounce } from "lodash";
+
 export default {
   name: "ShopCart",
   mounted() {
@@ -88,39 +93,60 @@ export default {
     getData() {
       this.$store.dispatch("getShopCart");
     },
-    async addSkuNum(cartItem) {
-      let params = { skuId: cartItem.skuId, skuNum: 1 };
-      try {
-        await this.$store.dispatch("updateCart", params);
-        this.getData();
-      } catch (error) {
-        alert("修改数量失败");
-      }
-    },
-    minusSkuNum: throttle(async function (cartItem) {
-      if (cartItem.skuNum > 1) {
-        let params = { skuId: cartItem.skuId, skuNum: -1 };
-        try {
-          await this.$store.dispatch("updateCart", params);
-          this.getData();
-        } catch (error) {
-          alert("修改数量失败");
-        }
-      }
-    }, 2000),
-    changeSkuNum: debounce(async function (cartItem, event) {
-      let params = { skuId: cartItem.skuId };
-      let userResultValue = event.target.value * 1;
-      if (isNaN(userResultValue) || userResultValue < 1) {
-        params.skuNum = 0;
-      } else {
-        params.skuNum = userResultValue - cartItem.skuNum;
+
+    changeSkuNum: throttle(async function (type, disNum, cartItem) {
+      switch (type) {
+        case "add":
+          disNum = 1;
+          break;
+        case "minus":
+          disNum = cartItem.skuNum > 1 ? -1 : 0;
+          break;
+        case "change":
+          if (isNaN(disNum) || disNum < 1) {
+            disNum = 1;
+          } else {
+            disNum = disNum - cartItem.skuNum;
+          }
       }
       try {
-        await this.$store.dispatch("updateCart", params);
+        await this.$store.dispatch("updateCart", {
+          skuId: cartItem.skuId,
+          skuNum: disNum,
+        });
         this.getData();
       } catch (error) {}
-    }, 500),
+    }, 200),
+
+    deleteCartItemById(cartItem) {
+      try {
+        this.$store.dispatch("deleteCartItemById", cartItem.skuId);
+        this.getData();
+      } catch (error) {
+        console.log(error.message);
+      }
+    },
+    async updateStatus(cartItem) {
+      let params = {
+        skuId: cartItem.skuId,
+        isChecked: parseInt(cartItem.isChecked) === 1 ? 0 : 1,
+      };
+      try {
+        await this.$store.dispatch("updateStatus", params);
+        this.getData();
+      } catch (error) {
+        console.log(error.message);
+      }
+    },
+
+    async deleteAllChecked() {
+      try {
+        await this.$store.dispatch("deleteAllChecked");
+        this.getData();
+      } catch (error) {
+        console.log(error.message);
+      }
+    },
   },
   computed: {
     ...mapGetters(["cartInfo"]),
@@ -129,8 +155,10 @@ export default {
     },
     totalPrice() {
       let sum = 0;
-      this.cartInfoList.forEach((item) => {
-        sum += item.skuNum * item.skuPrice;
+      this.cartInfoList.forEach((cartItem) => {
+        if (cartItem.isChecked === 1) {
+          sum += cartItem.skuNum * cartItem.skuPrice;
+        }
       });
       return sum;
     },
@@ -236,6 +264,7 @@ export default {
             width: 6px;
             text-align: center;
             padding: 8px;
+            cursor: pointer;
           }
 
           input {
@@ -248,6 +277,7 @@ export default {
           }
 
           .plus {
+            cursor: pointer;
             border: 1px solid #ddd;
             border-left: 0;
             float: left;
@@ -270,6 +300,7 @@ export default {
           width: 13%;
 
           a {
+            cursor: pointer;
             color: #666;
           }
         }
@@ -301,6 +332,7 @@ export default {
       float: left;
 
       a {
+        cursor: pointer;
         float: left;
         padding: 0 10px;
         color: #666;

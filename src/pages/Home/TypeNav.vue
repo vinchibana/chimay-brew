@@ -134,7 +134,7 @@ export default {
 <style scoped lang="less">
 .type-nav {
   border-bottom: 2px solid #e1251b;
-
+  cursor: pointer;
   .container {
     width: 1200px;
     margin: 0 auto;

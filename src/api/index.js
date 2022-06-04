@@ -20,3 +20,9 @@ export const reqBannerList = () =>
 
 export const reqFloorList = () =>
   mockRequests({ url: "/floor", method: "get" });
+
+export const reqUpdateStatus = (skuId, isChecked) =>
+  requests({ url: `/cart/checkCart/${skuId}/${isChecked}`, method: "get" });
+
+export const reqDeleteCartById = (skuId) =>
+  requests({ url: `/cart/deleteCart/${skuId}`, method: "delete" });

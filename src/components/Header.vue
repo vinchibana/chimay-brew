@@ -13,7 +13,7 @@
         </div>
         <div class="typeList">
           <a href="#">我的订单</a>
-          <a href="#">我的购物车</a>
+          <router-link to="/shopcart">我的购物车</router-link>
           <a href="#">会员</a>
           <a href="#">企业采购</a>
           <a href="#">关注</a>
@@ -91,6 +91,7 @@ export default {
       overflow: hidden;
 
       .loginList {
+        cursor: pointer;
         float: left;
 
         p {
@@ -110,10 +111,14 @@ export default {
 
         a {
           padding: 0 10px;
+          text-decoration: none;
 
           & + a {
             border-left: 1px solid #b3aeae;
           }
+        }
+        a:hover {
+          color: #ea4a36;
         }
       }
     }
