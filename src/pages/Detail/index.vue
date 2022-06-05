@@ -540,7 +540,6 @@ export default {
         }
 
         .choose {
-
           .chooseArea {
             overflow: hidden;
             line-height: 28px;

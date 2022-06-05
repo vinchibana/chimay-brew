@@ -11,12 +11,15 @@ const requests = axios.create({
 
 // 添加请求拦截器
 requests.interceptors.request.use(
-  function (config) {
+  (config) => {
     // 在发送请求之前做些什么
+    nprogress.start();
     if (store.state.detail.uuid_token) {
       config.headers.userTempId = store.state.detail.uuid_token;
     }
-    nprogress.start();
+    if (store.state.user.token) {
+      config.headers.token = store.state.user.token;
+    }
     return config;
   },
   function (error) {

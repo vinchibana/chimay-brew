@@ -26,3 +26,18 @@ export const reqUpdateStatus = (skuId, isChecked) =>
 
 export const reqDeleteCartById = (skuId) =>
   requests({ url: `/cart/deleteCart/${skuId}`, method: "delete" });
+
+export const reqGetVerifyCode = (phone) =>
+  requests({ url: `/user/passport/sendCode/${phone}`, method: "get" });
+
+export const reqUserRegister = (userData) =>
+  requests({ url: "/user/passport/register", method: "post", data: userData });
+
+export const reqUserLogin = (loginData) =>
+  requests({ url: "/user/passport/login", method: "post", data: loginData });
+
+export const reqUserInfo = () =>
+  requests({ url: "/user/passport/auth/getUserInfo", method: "get" });
+
+export const reqUserLogout = () =>
+  requests({ url: "/user/passport/logout", method: "get" });

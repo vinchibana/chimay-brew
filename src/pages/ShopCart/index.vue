@@ -25,10 +25,12 @@
             />
           </li>
           <li class="cart-list-con2">
-            <img :src="cartItem.imgUrl" alt="" />
-            <div class="item-msg">
-              {{ cartItem.skuName }}
-            </div>
+            <router-link :to="`/detail/${cartItem.skuId}`">
+              <img :src="cartItem.imgUrl" alt="" />
+              <div class="item-msg">
+                {{ cartItem.skuName }}
+              </div>
+            </router-link>
           </li>
           <li class="cart-list-con4">
             <span class="price">{{ cartItem.skuPrice }}.00</span>
@@ -93,7 +95,6 @@ export default {
     getData() {
       this.$store.dispatch("getShopCart");
     },
-
     changeSkuNum: throttle(async function (type, disNum, cartItem) {
       switch (type) {
         case "add":

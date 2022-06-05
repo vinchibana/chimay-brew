@@ -5,10 +5,15 @@
       <div class="container">
         <div class="loginList">
           <p>智美mall欢迎您！</p>
-          <p>
+          <p v-if="!userName">
             <span>请</span>
             <router-link to="/login">登录</router-link>
             <router-link to="/register" class="register">免费注册</router-link>
+          </p>
+          <p v-else>
+            <a>{{ userName }}</a
+            >&nbsp;&nbsp;
+            <a @click="userLogout">退出登录</a>
           </p>
         </div>
         <div class="typeList">
@@ -63,6 +68,11 @@ export default {
       this.keyword = "";
     });
   },
+  computed: {
+    userName() {
+      return this.$store.state.user.userInfo.nickName;
+    },
+  },
   methods: {
     goSearch() {
       let locations = {
@@ -73,6 +83,12 @@ export default {
         locations.query = this.$route.query;
       }
       this.$router.push(locations).catch((err) => err);
+    },
+    async userLogout() {
+      try {
+        await this.$store.dispatch("userLogout");
+        await this.$router.push("/home");
+      } catch (error) {}
     },
   },
 };
