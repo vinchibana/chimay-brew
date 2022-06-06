@@ -54,59 +54,6 @@
           </dl>
         </div>
         <router-view></router-view>
-        <!-- 右侧内容 -->
-        <!--猜你喜欢-->
-        <div class="like">
-          <h4 class="kt">猜你喜欢</h4>
-          <ul class="like-list">
-            <li class="likeItem">
-              <div class="p-img">
-                <img src="./images/itemlike01.png"  alt=""/>
-              </div>
-              <div class="attr">
-                <em>DELL戴尔Ins 15MR-7528SS 15英寸 银色 笔记本</em>
-              </div>
-              <div class="price">
-                <em>¥</em>
-                <i>3699.00</i>
-              </div>
-              <div class="commit">已有6人评价</div>
-            </li>
-            <li class="likeItem">
-              <div class="p-img">
-                <img src="./images/itemlike02.png"  alt=""/>
-              </div>
-              <div class="attr">Apple苹果iPhone 6s/6s Plus 16G 64G 128G</div>
-              <div class="price">
-                <em>¥</em>
-                <i>4388.00</i>
-              </div>
-              <div class="commit">已有700人评价</div>
-            </li>
-            <li class="likeItem">
-              <div class="p-img">
-                <img src="./images/itemlike03.png"  alt=""/>
-              </div>
-              <div class="attr">DELL戴尔Ins 15MR-7528SS 15英寸 银色 笔记本</div>
-              <div class="price">
-                <em>¥</em>
-                <i>4088.00</i>
-              </div>
-              <div class="commit">已有700人评价</div>
-            </li>
-            <li class="likeItem">
-              <div class="p-img">
-                <img src="./images/itemlike04.png"  alt=""/>
-              </div>
-              <div class="attr">DELL戴尔Ins 15MR-7528SS 15英寸 银色 笔记本</div>
-              <div class="price">
-                <em>¥</em>
-                <i>4088.00</i>
-              </div>
-              <div class="commit">已有700人评价</div>
-            </li>
-          </ul>
-        </div>
       </div>
     </div>
   </div>

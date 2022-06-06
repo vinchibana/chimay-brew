@@ -41,12 +41,36 @@ const router = new VueRouter({
 
 export default router;
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   next();
   let token = store.state.user.token;
+  let name = store.state.user.userInfo.name;
   if (token) {
-    if (to.path === "/login") {
+    if (to.path == "/login" || to.path == "/register") {
       next("/");
+    } else {
+      if (name) {
+        next();
+      } else {
+        try {
+          await store.dispatch("getUserInfo");
+          next();
+        } catch (error) {
+          await store.dispatch("userLogout");
+          next("/login");
+        }
+      }
+    }
+  } else {
+    let toPath = to.path;
+    if (
+      toPath.indexOf("/trade") != -1 ||
+      toPath.indexOf("/pay") != -1 ||
+      toPath.indexOf("center") != -1
+    ) {
+      next("/login?redirect=" + toPath);
+    } else {
+      next();
     }
   }
 });
