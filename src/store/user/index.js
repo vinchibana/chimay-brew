@@ -63,7 +63,7 @@ const actions = {
     if (result.code === 200) {
       commit("GET_USERINFO", result.data);
     } else {
-      return Promise.reject(new Error("failed"));
+      return Promise.reject();
     }
   },
 

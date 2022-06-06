@@ -6,6 +6,10 @@ import Detail from "@/pages/Detail";
 import AddCartSuccess from "@/pages/AddCartSuccess";
 import ShopCart from "@/pages/ShopCart";
 import Trade from "@/pages/Trade";
+import Pay from "@/pages/Pay";
+import Center from "@/pages/Center";
+import MyOrder from "@/pages/Center/myOrder";
+import GroupOrder from "@/pages/Center/groupOrder";
 
 export default [
   {
@@ -13,6 +17,26 @@ export default [
     path: "/home",
     component: Home,
     meta: { show: true },
+  },
+  {
+    name: "center",
+    path: "/center",
+    component: Center,
+    meta: { show: true },
+    children: [
+      {
+        path: "myorder",
+        component: MyOrder,
+      },
+      {
+        path: "grouporder",
+        component: GroupOrder,
+      },
+      {
+        path: "/center",
+        redirect: "/center/myorder",
+      },
+    ],
   },
   {
     name: "search",
@@ -52,6 +76,13 @@ export default [
     name: "trade",
     path: "/trade",
     component: Trade,
+    meta: { show: true },
+  },
+  {
+    name: "pay",
+    path: "/pay",
+    component: Pay,
+    meta: { show: true },
   },
   {
     path: "/",
