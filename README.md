@@ -1,4 +1,4 @@
-# chimay-brew &emsp; [![Netlify Status](https://api.netlify.com/api/v1/badges/9aad137a-530d-4cb7-ab51-c0526f6bde55/deploy-status)](https://app.netlify.com/sites/chimay-brew/deploys)
+# chimay-brew &ensp;[![Netlify Status](https://api.netlify.com/api/v1/badges/9aad137a-530d-4cb7-ab51-c0526f6bde55/deploy-status)](https://app.netlify.com/sites/chimay-brew/deploys)
 
 * 在线电商 Web App (SPA)
 * 包括首页, 搜索列表, 商品详情, 购物车, 订单, 支付, 用户登陆/注册等多个子模块
