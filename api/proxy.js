@@ -1,12 +1,14 @@
 // 该服务为 vercel serve跨域处理
 const { createProxyMiddleware } = require("http-proxy-middleware");
+
 module.exports = (req, res) => {
   let target = "";
+
   // 代理目标地址
   if (req.url.startsWith("/api")) {
-    //这里使用/api可能会与vercel serverless 的 api 路径冲突，根据接口进行调整
-    target = "http://gmall-h5-api.atguigu.cn"; //这里就是在vite中配置的一样
+    target = "http://gmall-h5-api.atguigu.cn";
   }
+
   // 创建代理对象并转发请求
   createProxyMiddleware({
     target,
