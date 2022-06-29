@@ -26,13 +26,17 @@
             ></el-input>
           </el-form-item>
           <el-form-item label="获取并输入验证码" prop="code">
-            <el-button type="danger" @click="getVerifyCode"
-              >获取验证码</el-button
-            ><el-input
+            <el-input
               type="text"
               v-model="ruleForm.code"
               autocomplete="off"
             ></el-input>
+            <el-button
+              style="margin-top: 5px"
+              type="danger"
+              @click="getVerifyCode"
+              >获取验证码</el-button
+            >
           </el-form-item>
           <el-form-item label="请输入密码" prop="password">
             <el-input
@@ -41,10 +45,7 @@
               autocomplete="off"
               show-password
             ></el-input>
-            <el-alert
-              title="（密码应包含大小写字母，且不少于6位）"
-              type="error"
-            >
+            <el-alert title="（密码应包含大小写字母，且不少于6位）" type="info">
             </el-alert>
           </el-form-item>
           <el-form-item label="再次输入确认密码" prop="checkPass">
@@ -74,7 +75,10 @@
           inactive-color="#ffdada"
         >
         </el-switch
-        ><span>同意协议并注册《用户协议》</span>
+        >&nbsp;&nbsp;&nbsp;<span></span>
+        <el-link
+          >同意用户协议<i class="el-icon-view el-icon--right"></i>
+        </el-link>
       </div>
     </div>
 
@@ -237,7 +241,7 @@ export default {
     }
 
     div:nth-of-type(1) {
-      margin-top: 40px;
+      margin-top: 8px;
     }
 
     .content {
@@ -254,7 +258,7 @@ export default {
       }
 
       input {
-        width: 270px;
+        width: 200px;
         height: 38px;
         padding-left: 8px;
         box-sizing: border-box;
@@ -278,6 +282,7 @@ export default {
     .controls {
       text-align: center;
       position: relative;
+      margin-top: 50px;
 
       input {
         vertical-align: middle;

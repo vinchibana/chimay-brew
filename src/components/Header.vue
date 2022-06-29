@@ -127,6 +127,7 @@ export default {
 
         a {
           padding: 0 10px;
+          text-decoration: none;
 
           & + a {
             border-left: 1px solid #b3aeae;
@@ -147,7 +148,7 @@ export default {
       .logo {
         img {
           width: 175px;
-          margin: 25px 45px;
+          margin: 25px 25px;
         }
       }
     }
