@@ -22,6 +22,7 @@ new Vue({
   router,
   store,
   beforeCreate() {
+    // 为原型添加事件总线、API
     Vue.prototype.$bus = this;
     Vue.prototype.$API = API;
   },

@@ -29,6 +29,8 @@ const mutations = {
     removeToken();
   },
 };
+
+// actions 函数接收 context，可解构出 commit，state，dispatch，getters
 const actions = {
   async getVerifyCode({ commit }, phone) {
     let result = await reqGetVerifyCode(phone);

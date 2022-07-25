@@ -1,5 +1,5 @@
 import { reqSkuInfo, reqUpdateCart } from "@/api";
-import {getUUID} from "@/utils/uuid_token";
+import { getUUID } from "@/utils/uuid_token";
 
 const state = {
   goodInfo: {},

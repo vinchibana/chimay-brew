@@ -5,7 +5,8 @@
     <Recommend />
     <Rank />
     <Like />
-    <Floor v-for="floor in floorList" :key="floor.id" :list="floor"/>
+    <!-- 两层 floor -->
+    <Floor v-for="floor in floorList" :key="floor.id" :list="floor" />
   </div>
 </template>
 
@@ -15,7 +16,7 @@ import Recommend from "@/pages/Home/Recommend";
 import Rank from "@/pages/Home/Rank";
 import Like from "@/pages/Home/Like";
 import Floor from "@/pages/Home/Floor";
-import {mapState} from "vuex";
+import { mapState } from "vuex";
 export default {
   name: "Home",
   components: {
@@ -30,6 +31,7 @@ export default {
   },
   computed: {
     ...mapState({
+      // 将 state home 模块当中的 floorList 映射到当前组件
       floorList: (state) => state.home.floorList,
     }),
   },

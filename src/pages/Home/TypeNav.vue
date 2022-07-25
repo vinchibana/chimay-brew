@@ -3,6 +3,8 @@
     <div class="container">
       <div @mouseleave="hideOnLeave" @mouseenter="showOnEnter">
         <h2 class="all">全部商品分类</h2>
+
+        <!-- 用 showTypeNav 控制是否默认展开商品分类菜单 -->
         <div class="sort" v-show="showTypeNav">
           <div class="all-sort-list2" @click="goSearch">
             <div
@@ -11,6 +13,7 @@
               :key="c1.categoryId"
               :class="{ cur: currentIndex === index }"
             >
+              <!-- 鼠标进入时改变 currentIndex 为鼠标所在的 index，可被点击并搜索分类 -->
               <h3 @mouseenter="changeIndex(index)">
                 <a
                   :data-catName="c1.categoryName"
@@ -18,7 +21,7 @@
                   >{{ c1.categoryName }}</a
                 >
               </h3>
-              <!-- 控制二级分类是否显示，此时 currentIndex 已经被 h3 的鼠标事件修改为与 index 相同-->
+              <!-- block 弹出显示二三级分类菜单 -->
               <div
                 class="item-list clearfix"
                 :style="{ display: currentIndex === index ? 'block' : 'none' }"
@@ -74,8 +77,8 @@ export default {
   name: "TypeNav",
   data() {
     return {
-      currentIndex: -1,
-      showTypeNav: true,
+      currentIndex: -1, // 高亮显示鼠标指向的分类
+      showTypeNav: true, // 是否展开三级菜单
     };
   },
   mounted() {
@@ -84,6 +87,7 @@ export default {
     }
   },
   methods: {
+    // 节流，防止快速操作分类菜单时造成卡顿
     changeIndex: throttle(function (index) {
       this.currentIndex = index;
     }),
@@ -100,6 +104,7 @@ export default {
       }
     },
     goSearch(event) {
+      // 此处 target 为 a 元素，并通过 :data-catName 绑定自定义属性 catName 和 catid、cat2id 等到 dataset 中
       let targetNode = event.target;
       let { catname, catid, cat2id, cat3id } = targetNode.dataset;
       if (catname) {
@@ -107,6 +112,7 @@ export default {
           name: "search",
           query: { categoryName: catname },
         };
+        // 拼接 query 参数
         if (catid) {
           locations.query.categoryId = catid;
         } else if (cat2id) {
@@ -114,11 +120,10 @@ export default {
         } else {
           locations.query.category3Id = cat3id;
         }
-        //点击商品分类按钮的时候,如果路径当中携带params参数,需要合并携带给search模块
+        //点击商品分类按钮的时候,如果路径当中携带 params 参数,需要合并携带给 search 模块
         if (this.$route.params.keyword) {
           locations.params = this.$route.params;
         }
-        //目前商品分类这里携带参数只有query参数
         this.$router.push(locations);
       }
     },

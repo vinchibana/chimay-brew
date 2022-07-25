@@ -21,6 +21,7 @@ const actions = {
   async categoryList({ commit }) {
     let result = await reqCategoryList();
     if (result.code === 200) {
+      // result.data 作为 commit 的 payload，下同
       commit("GET_CATEGORYLIST", result.data);
     }
   },

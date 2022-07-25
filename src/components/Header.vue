@@ -1,10 +1,10 @@
 <template>
   <header class="header">
-    <!-- 头部的第一行 -->
     <div class="top">
       <div class="container">
         <div class="loginList">
           <p>什么值得买</p>
+          <!-- 未登录时显示 -->
           <p v-if="!userName">
             <span>请</span>
             <router-link to="/login">登录</router-link>
@@ -31,6 +31,7 @@
     <!--头部第二行 搜索区域-->
     <div class="bottom">
       <h1 class="logoArea">
+        <!-- 路由页面导航 -->
         <router-link class="logo" to="/home">
           <img src="../assets/logo.png" style="width: 175px" alt="" />
         </router-link>
@@ -70,6 +71,7 @@ export default {
     });
   },
   computed: {
+    // 从 state 中取用户信息
     userName() {
       return this.$store.state.user.userInfo.nickName;
     },
@@ -80,6 +82,8 @@ export default {
         name: "search",
         params: { keyword: this.keyword || undefined },
       };
+
+      // 在搜索结果页搜索 keyword，添加当前商品分类为 query
       if (this.$route.query.categoryName) {
         locations.query = this.$route.query;
       }
@@ -87,6 +91,7 @@ export default {
     },
     async userLogout() {
       try {
+        // 派发退出登录 action 并返回至 home
         await this.$store.dispatch("userLogout");
         await this.$router.push("/home");
       } catch (error) {}

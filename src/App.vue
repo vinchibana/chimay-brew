@@ -1,8 +1,8 @@
 <template>
   <div id="app">
-    <Header/>
+    <Header />
     <router-view></router-view>
-    <Footer v-show="$route.meta.show"/>
+    <Footer v-show="$route.meta.show" />
   </div>
 </template>
 
@@ -11,17 +11,16 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
 export default {
-  name: 'App',
+  name: "App",
   components: {
     Header,
-    Footer
+    Footer,
   },
   mounted() {
     this.$store.dispatch("categoryList");
-    this.$store.dispatch('getUserInfo')
-  }
-}
+    this.$store.dispatch("getUserInfo");
+  },
+};
 </script>
 
-<style>
-</style>
+<style></style>
