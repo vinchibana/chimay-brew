@@ -45,9 +45,11 @@ export default {
     ...mapGetters(["attrsList", "trademarkList"]),
   },
   methods: {
+    // 自定义事件通知父组件选择的 trademark
     trademarkSelector(trademark) {
       this.$emit("trademarkSelector", trademark);
     },
+    // 自定义事件通知父组件选择的 attr
     attrSelector(attr, attrValue) {
       this.$emit("attrSelector", attr, attrValue);
     },

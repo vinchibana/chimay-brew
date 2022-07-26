@@ -87,7 +87,7 @@ export default {
       if (this.$route.query.categoryName) {
         locations.query = this.$route.query;
       }
-      this.$router.push(locations).catch((err) => err);
+      this.$router.push(locations)
     },
     async userLogout() {
       try {

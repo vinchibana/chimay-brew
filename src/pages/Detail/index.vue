@@ -378,6 +378,7 @@ export default {
     },
   },
   methods: {
+    // 高亮选择售卖属性，先将所有设为‘0’
     changeActive(spuSaleAttrValue, arr) {
       arr.forEach((item) => {
         return (item.isChecked = "0");
@@ -388,8 +389,9 @@ export default {
       try {
         await this.$store.dispatch("updateCart", {
           skuId: this.$route.params.skuid,
-          skuNum: this.buyNum,
+          skuNum: this.buyNum
         });
+        // 将购物车保存至 sessionStorage
         sessionStorage.setItem("SKU_INFO", JSON.stringify(this.skuInfo));
         await this.$router.push({
           path: "/addcartsuccess",
@@ -404,7 +406,7 @@ export default {
       if (isNaN(value) || value < 1) {
         this.buyNum = 1;
       } else {
-        this.buyNum = parseInt(value);
+        this.buyNum = value;
       }
     },
   },

@@ -1,5 +1,6 @@
 import requests from "@/api/ajax";
 import mockRequests from "./mock";
+
 export const reqCategoryList = () =>
   requests({ url: "/product/getBaseCategoryList", method: "get" });
 

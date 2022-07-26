@@ -58,7 +58,7 @@
       <nav class="nav">
         <a href="#">服装城</a>
         <a href="#">美妆馆</a>
-        <a href="#">尚品汇超市</a>
+        <a href="#">值得买超市</a>
         <a href="#">全球购</a>
         <a href="#">闪购</a>
         <a href="#">团购</a>
@@ -125,6 +125,7 @@ export default {
           locations.params = this.$route.params;
         }
         this.$router.push(locations);
+        this.showTypeNav = false;
       }
     },
   },

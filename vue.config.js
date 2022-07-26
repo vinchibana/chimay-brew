@@ -12,6 +12,6 @@ module.exports = defineConfig({
 
   productionSourceMap: false,
   configureWebpack: {
-    devtool: process.env.NODE_ENV === "dev" ? "source-map" : undefined,
+    devtool: process.env.NODE_ENV === "dev" ? "#eval-source-map" : undefined,
   },
 });

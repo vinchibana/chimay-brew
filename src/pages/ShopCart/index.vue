@@ -123,6 +123,7 @@ export default {
       try {
         this.$store.dispatch("deleteCartItemById", cartItem.skuId);
         this.getData();
+        console.log('aaa')
       } catch (error) {
         console.log(error.message);
       }
@@ -164,6 +165,7 @@ export default {
       return sum;
     },
     isAllChecked() {
+      // every() 方法测试一个数组内的所有元素是否都能通过某个指定函数的测试
       return this.cartInfoList.every((item) => item.isChecked === 1);
     },
   },

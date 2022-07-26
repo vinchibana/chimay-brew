@@ -10,6 +10,7 @@
               <a href="#">全部结果</a>
             </li>
           </ul>
+          <!-- 面包屑部分，显示分类、品牌、属性面包屑，以及移除面包屑的方法 -->
           <ul class="fl sui-tag">
             <li class="with-x" v-if="searchParams.categoryName">
               {{ searchParams.categoryName
@@ -100,9 +101,8 @@
                   </div>
                   <div class="operate">
                     <a
-                      href="#"
-                      target="_blank"
                       class="sui-btn btn-bordered btn-danger"
+                      @click="updateCart(item.id)"
                       >加入购物车</a
                     >
                     <a href="javascript:void(0);" class="sui-btn btn-bordered"
@@ -155,13 +155,15 @@ export default {
     Pagination,
   },
   computed: {
-    ...mapGetters(["goodsList"]),
+    ...mapGetters(["goodsList", "skuInfo"]),
+    // 综合、销量
     flagIndicator() {
       return this.searchParams.order.indexOf("1") !== -1;
     },
     flag2Indicator() {
       return this.searchParams.order.indexOf("2") !== -1;
     },
+    // 排序
     ascIndicator() {
       return this.searchParams.order.indexOf("asc") !== -1;
     },
@@ -172,85 +174,116 @@ export default {
       total: (state) => state.search.searchList.total,
     }),
   },
-  // params 来自于 Header 组件取自 input 框的 keyword 参数
-  // query 来自于 TypeNav 组件 push location 前拼接的参数 {name:'search',query:{...}}
+
   beforeMount() {
+    // 将 route 中的 query、params 合并至 this.searchParams
+    // params 来自于 Header 组件取自 input 框的 keyword 参数
+    // query 来自于 TypeNav 组件 push location 前拼接的参数 {name:'search',query:{...}}
     Object.assign(this.searchParams, this.$route.query, this.$route.params);
   },
   mounted() {
     this.getSearchData();
+    console.log(this.skuInfo)
   },
+
   methods: {
     getSearchData() {
       this.$store.dispatch("getSearchList", this.searchParams);
     },
-    removeBreadCatName() {
-      this.searchParams.categoryName = undefined;
-      this.searchParams.category1Id = undefined;
-      this.searchParams.category2Id = undefined;
-      this.searchParams.category3Id = undefined;
-      this.getSearchData();
-      if (this.$route.params) {
-        this.$router
-          .push({
-            name: "search",
-            params: this.$route.params,
-          })
-          .catch((err) => err);
+
+    async updateCart(skuId) {
+      try {
+        await this.$store.dispatch("getGoodInfo", skuId);
+        await this.$store.dispatch("updateCart", {
+          skuId: skuId,
+          skuNum: 1,
+        });
+        // 将购物车保存至 sessionStorage
+        sessionStorage.setItem("SKU_INFO", JSON.stringify(this.skuInfo));
+        await this.$router.push({
+          path: "/addcartsuccess",
+          query: { skuNum: 1 },
+        });
+      } catch (error) {
+        alert(error.message);
       }
     },
-    removeBreadKeyword() {
-      this.searchParams.keyword = undefined;
-      this.getSearchData();
-      this.$bus.$emit("clearSearchInput");
-      if (this.$route.query) {
-        this.$router
-          .push({
-            name: "search",
-          })
-          .catch((err) => err);
-      }
-    },
-    // 品牌面包屑展示与删除
+    // 品牌与属性选择
     trademarkSelector(trademark) {
       this.searchParams.trademark = `${trademark.tmId}:${trademark.tmName}`;
       this.getSearchData();
     },
-    removeBreadTrade() {
-      this.searchParams.trademark = undefined;
-      this.getSearchData();
-    },
-    // 商品属性面包屑展示与删除
+
     attrSelector(attr, attrValue) {
       let props = `${attr.attrId}:${attrValue}:${attr.attrName}`;
       if (this.searchParams.props.indexOf(props) === -1)
         this.searchParams.props.push(props);
       this.getSearchData();
     },
+
+    // 分类面包屑展示与删除
+    removeBreadCatName() {
+      this.searchParams.categoryName = undefined;
+      this.searchParams.category1Id = undefined;
+      this.searchParams.category2Id = undefined;
+      this.searchParams.category3Id = undefined;
+      this.getSearchData();
+
+      // 清除参数以便二次点击分类名搜索
+      if (this.$route.params) {
+        console.log(this.$route.query);
+        this.$router.push({
+          name: "search",
+          params: this.$route.params,
+        });
+      }
+    },
+
+    // keywords 面包屑清除，同时清除搜索框 keyword
+    removeBreadKeyword() {
+      this.searchParams.keyword = undefined;
+      this.getSearchData();
+      this.$bus.$emit("clearSearchInput");
+      if (this.$route.params) {
+        this.$router.push({
+          name: "search",
+        });
+      }
+    },
+
+    // 品牌面包屑展示与删除
+    removeBreadTrade() {
+      this.searchParams.trademark = undefined;
+      this.getSearchData();
+    },
+
+    // 商品属性面包屑展示与删除
     removeBreadAttr(index) {
       this.searchParams.props.splice(index, 1);
       this.getSearchData();
     },
+
     changeOrder(flag) {
+      // 从当前 searchParams 中获取当前 flag 和排序
       let originFlag = parseInt(this.searchParams.order.split(":")[0]);
       let originSort = this.searchParams.order.split(":")[1];
       let newOrder = "";
       if (flag === originFlag) {
         newOrder = `${originFlag}:${originSort === "desc" ? "asc" : "desc"}`;
-        console.log("if", newOrder);
       } else {
         newOrder = `${flag}:desc`;
-        console.log("else", newOrder);
       }
+      // newOrder 赋值给 searchParams 并发送请求获取新排序
       this.searchParams.order = newOrder;
       this.getSearchData();
     },
     currentPage(pageNo) {
       this.searchParams.pageNo = pageNo;
-      this.getSearchData()
+      this.getSearchData();
     },
   },
   watch: {
+    // 为 header 组件的 goSearch 方法准备，goSearch 只通过 push 和参数改变了路由，并未发起搜索请求
     $route() {
       Object.assign(this.searchParams, this.$route.query, this.$route.params);
       this.getSearchData();
